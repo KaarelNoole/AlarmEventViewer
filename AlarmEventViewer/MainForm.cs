@@ -64,7 +64,8 @@ namespace AlarmEventViewer
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Message", Width=200},
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Priority", Width=50},
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "State",Width=50},
-			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Alarm Definition",Width=200}
+			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Alarm Definition",Width=200},
+                                                    new DataGridViewTextBoxColumn() {HeaderText = "Alarm Category", Width=200},
 			                                   	});
                     break;
                 case ViewMode.Analytics:
@@ -338,7 +339,7 @@ namespace AlarmEventViewer
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.Category);
                     dataGridViewAlarm.Rows.Add(row);
                 }
 
@@ -417,7 +418,7 @@ namespace AlarmEventViewer
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
             }
