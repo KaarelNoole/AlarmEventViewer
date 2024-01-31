@@ -41,6 +41,8 @@ namespace AlarmEventViewer
             this.rbEvents = new System.Windows.Forms.RadioButton();
             this.rbAlarms = new System.Windows.Forms.RadioButton();
             this.rbAccess = new System.Windows.Forms.RadioButton();
+            this.rbSavedAlarm = new System.Windows.Forms.RadioButton();
+            this.buttonTag = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAlarm)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -97,6 +99,18 @@ namespace AlarmEventViewer
             this.buttonCompleted.UseVisualStyleBackColor = true;
             this.buttonCompleted.Click += new System.EventHandler(this.buttonCompleted_Click);
             // 
+            // buttonTag
+            // 
+            this.buttonTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonTag.Enabled = false;
+            this.buttonTag.Location = new System.Drawing.Point(270, 442);
+            this.buttonTag.Name = "buttonTag";
+            this.buttonTag.Size = new System.Drawing.Size(98, 23);
+            this.buttonTag.TabIndex = 7;
+            this.buttonTag.Text = "Tag";
+            this.buttonTag.UseVisualStyleBackColor = true;
+            this.buttonTag.Click += new System.EventHandler(this.buttonTag_Click);
+            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -109,7 +123,7 @@ namespace AlarmEventViewer
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(526, 70);
-            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Viewer mode";
             // 
@@ -153,7 +167,7 @@ namespace AlarmEventViewer
             this.rbAlarms.Location = new System.Drawing.Point(7, 20);
             this.rbAlarms.Name = "rbAlarms";
             this.rbAlarms.Size = new System.Drawing.Size(56, 17);
-            this.rbAlarms.TabIndex = 0;
+            this.rbAlarms.TabIndex = 9;
             this.rbAlarms.TabStop = true;
             this.rbAlarms.Text = "Alarms";
             this.rbAlarms.UseVisualStyleBackColor = true;
@@ -168,6 +182,18 @@ namespace AlarmEventViewer
             this.rbAccess.TabIndex = 4;
             this.rbAccess.TabStop = true;
             this.rbAccess.Text = "Access Control Events";
+            this.rbAccess.UseVisualStyleBackColor = true;
+            this.rbAccess.CheckedChanged += new System.EventHandler(this.onModeChange);
+            /*
+             rbSavedAlarm
+             */
+            this.rbAccess.AutoSize = true;
+            this.rbAccess.Location = new System.Drawing.Point(257, 44);
+            this.rbAccess.Name = "rbSavedAlarm";
+            this.rbAccess.Size = new System.Drawing.Size(132, 17);
+            this.rbAccess.TabIndex = 1;
+            this.rbAccess.TabStop = true;
+            this.rbAccess.Text = "Saved Alarm";
             this.rbAccess.UseVisualStyleBackColor = true;
             this.rbAccess.CheckedChanged += new System.EventHandler(this.onModeChange);
             // 
@@ -205,5 +231,7 @@ namespace AlarmEventViewer
         private System.Windows.Forms.RadioButton rbEvents;
         private System.Windows.Forms.RadioButton rbAlarms;
         private System.Windows.Forms.RadioButton rbAccess;
+        private System.Windows.Forms.RadioButton rbSavedAlarm;
+        private System.Windows.Forms.Button buttonTag;
     }
 }

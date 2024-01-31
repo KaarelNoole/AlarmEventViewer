@@ -327,7 +327,7 @@ namespace AlarmEventViewer
             try
             {
                 IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
-                AlarmLine[] alarms = alarmClient.GetAlarmLines(0, 10, new VideoOS.Platform.Proxy.Alarm.AlarmFilter()
+                AlarmLine[] alarms = alarmClient.GetAlarmLines(1, 1000,new AlarmFilter()
                 {
                     Orders = new OrderBy[] { new OrderBy() { Order = Order.Descending, Target = Target.Timestamp } }
                 });
@@ -340,6 +340,34 @@ namespace AlarmEventViewer
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
                                     alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.Category);
+                    dataGridViewAlarm.Rows.Add(row);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                EnvironmentManager.Instance.ExceptionDialog("OnLoad", ex);
+            }
+        }
+
+        private void LoadClientSavedAlarm()
+        {
+            try
+            {
+                IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
+                AlarmLine[] alarms = alarmClient.GetAlarmLines(1, 10, new AlarmFilter()
+                {
+                    Orders = new OrderBy[] { new OrderBy() { Order = Order.Descending, Target = Target.Timestamp } }
+                });
+
+                foreach (AlarmLine line in alarms)
+                {
+                    Alarm alarm = alarmClient.Get(line.Id);
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.Tag = alarm;
+                    string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
+                    row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef);
                     dataGridViewAlarm.Rows.Add(row);
                 }
 
@@ -421,6 +449,35 @@ namespace AlarmEventViewer
                                     alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
+                
+            }
+            return null;
+        }
+
+        private object NewSavedAlarmMessageHandler(VideoOS.Platform.Messaging.Message message, FQID dest, FQID source)
+        {
+            if (_viewMode != ViewMode.Alarm)
+            {
+                return null;
+            }
+
+            if (InvokeRequired)
+            {
+                Invoke(new MessageReceiver(NewSavedAlarmMessageHandler), message, dest, source);
+            }
+            else
+            {
+                Alarm alarm = message.Data as Alarm;
+                if (alarm != null)
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    row.Tag = alarm;
+                    string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
+                    row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
+                    dataGridViewAlarm.Rows.Insert(0, row);
+                }
+
             }
             return null;
         }
@@ -606,6 +663,26 @@ namespace AlarmEventViewer
                     }
                 }
             }
+        }
+
+        private void buttonTag_Click(object sender, EventArgs e)
+        {
+            //if (_selectedRow != null)
+            //{
+            //    Alarm alarm = _selectedRow.Tag as Alarm;
+            //    if (alarm != null)
+            //    {
+            //        try
+            //        {
+            //            IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
+            //            alarmClient.UpdateAlarm(alarm.EventHeader.ID, "Operator changed to Tag", 4, 1, DateTime.UtcNow, "");
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            EnvironmentManager.Instance.ExceptionDialog("MessageHandler", ex);
+            //        }
+            //    }
+            //}
         }
 
         private void buttonCompleted_Click(object sender, EventArgs e)
