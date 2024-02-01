@@ -66,6 +66,7 @@ namespace AlarmEventViewer
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "State",Width=50},
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Alarm Definition",Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Alarm Category", Width=200},
+                                                    new DataGridViewTextBoxColumn() {HeaderText = "Tag", Width=200},
 			                                   	});
                     break;
                 case ViewMode.Analytics:
@@ -420,7 +421,7 @@ namespace AlarmEventViewer
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.CustomTag);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
                 
@@ -647,7 +648,22 @@ namespace AlarmEventViewer
                 customDialog.ShowDialog();
             }
 
-            
+            if (_selectedRow != null)
+            {
+                Alarm alarm = _selectedRow.Tag as Alarm;
+                if (alarm != null)
+                {
+                    try
+                    {
+                        IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
+                        alarmClient.UpdateAlarm(alarm.EventHeader.ID, "Operator added alarm tag ", 4, 1, DateTime.UtcNow, "");
+                    }
+                    catch (Exception ex)
+                    {
+                        EnvironmentManager.Instance.ExceptionDialog("MessageHandler", ex);
+                    }
+                }
+            }
         }
 
         private void buttonCompleted_Click(object sender, EventArgs e)
