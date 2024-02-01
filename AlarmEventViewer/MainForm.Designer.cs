@@ -1,3 +1,5 @@
+using VideoOS.Platform.Data;
+
 namespace AlarmEventViewer
 {
 	partial class MainForm
@@ -110,6 +112,7 @@ namespace AlarmEventViewer
             this.buttonTag.Text = "Tag";
             this.buttonTag.UseVisualStyleBackColor = true;
             this.buttonTag.Click += new System.EventHandler(this.buttonTag_Click);
+            this.Controls.Add(this.buttonTag);
             // 
             // groupBox1
             // 
@@ -184,18 +187,6 @@ namespace AlarmEventViewer
             this.rbAccess.Text = "Access Control Events";
             this.rbAccess.UseVisualStyleBackColor = true;
             this.rbAccess.CheckedChanged += new System.EventHandler(this.onModeChange);
-            /*
-             rbSavedAlarm
-             */
-            this.rbAccess.AutoSize = true;
-            this.rbAccess.Location = new System.Drawing.Point(257, 44);
-            this.rbAccess.Name = "rbSavedAlarm";
-            this.rbAccess.Size = new System.Drawing.Size(132, 17);
-            this.rbAccess.TabIndex = 1;
-            this.rbAccess.TabStop = true;
-            this.rbAccess.Text = "Saved Alarm";
-            this.rbAccess.UseVisualStyleBackColor = true;
-            this.rbAccess.CheckedChanged += new System.EventHandler(this.onModeChange);
             // 
             // MainForm
             // 
@@ -205,6 +196,7 @@ namespace AlarmEventViewer
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCompleted);
             this.Controls.Add(this.buttonInprogress);
+            this.Controls.Add(this.buttonTag);
             this.Controls.Add(this.dataGridViewAlarm);
             this.Controls.Add(this.buttonClose);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -215,6 +207,9 @@ namespace AlarmEventViewer
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            //
+            // DialogWindow
+            //
 
 		}
 
@@ -233,5 +228,7 @@ namespace AlarmEventViewer
         private System.Windows.Forms.RadioButton rbAccess;
         private System.Windows.Forms.RadioButton rbSavedAlarm;
         private System.Windows.Forms.Button buttonTag;
+        private System.Windows.Forms.Button AddTag;
+        private System.Windows.Forms.TextBox textBox;
     }
 }

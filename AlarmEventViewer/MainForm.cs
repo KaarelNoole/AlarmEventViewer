@@ -124,6 +124,7 @@ namespace AlarmEventViewer
                 {
                     buttonCompleted.Enabled = false;
                     buttonInprogress.Enabled = false;
+                    buttonTag.Enabled = false;
                 }
 
                 setGrid();
@@ -339,7 +340,7 @@ namespace AlarmEventViewer
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.Category);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
                     dataGridViewAlarm.Rows.Add(row);
                 }
 
@@ -350,33 +351,6 @@ namespace AlarmEventViewer
             }
         }
 
-        private void LoadClientSavedAlarm()
-        {
-            try
-            {
-                IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
-                AlarmLine[] alarms = alarmClient.GetAlarmLines(1, 10, new AlarmFilter()
-                {
-                    Orders = new OrderBy[] { new OrderBy() { Order = Order.Descending, Target = Target.Timestamp } }
-                });
-
-                foreach (AlarmLine line in alarms)
-                {
-                    Alarm alarm = alarmClient.Get(line.Id);
-                    DataGridViewRow row = new DataGridViewRow();
-                    row.Tag = alarm;
-                    string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
-                    row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef);
-                    dataGridViewAlarm.Rows.Add(row);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                EnvironmentManager.Instance.ExceptionDialog("OnLoad", ex);
-            }
-        }
         #endregion
 
         #region message handlers
@@ -643,6 +617,7 @@ namespace AlarmEventViewer
             }
             buttonCompleted.Enabled = _selectedRow != null;
             buttonInprogress.Enabled = _selectedRow != null;
+            buttonTag.Enabled = _selectedRow != null;
         }
 
         private void buttonInprogress_Click(object sender, EventArgs e)
@@ -667,22 +642,12 @@ namespace AlarmEventViewer
 
         private void buttonTag_Click(object sender, EventArgs e)
         {
-            //if (_selectedRow != null)
-            //{
-            //    Alarm alarm = _selectedRow.Tag as Alarm;
-            //    if (alarm != null)
-            //    {
-            //        try
-            //        {
-            //            IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
-            //            alarmClient.UpdateAlarm(alarm.EventHeader.ID, "Operator changed to Tag", 4, 1, DateTime.UtcNow, "");
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            EnvironmentManager.Instance.ExceptionDialog("MessageHandler", ex);
-            //        }
-            //    }
-            //}
+            using (CustomDialogForm customDialog = new CustomDialogForm())
+            {
+                customDialog.ShowDialog();
+            }
+
+            
         }
 
         private void buttonCompleted_Click(object sender, EventArgs e)
