@@ -1,15 +1,19 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Windows.Forms;
 using VideoOS.Platform;
 using VideoOS.Platform.Data;
 using VideoOS.Platform.Messaging;
 using VideoOS.Platform.Proxy.Alarm;
 using VideoOS.Platform.Proxy.AlarmClient;
+using static AlarmEventViewer.CustomDialogForm;
 
 namespace AlarmEventViewer
 {
     public partial class MainForm : Form
     {
+        private CustomDialogForm customDialogForm;
         private object _obj1, _obj2, _obj3;
         DataGridViewRow _selectedRow = null;
         private AlarmClientManager _alarmClientManager;
@@ -17,12 +21,16 @@ namespace AlarmEventViewer
         private enum ViewMode { Alarm, Event, Analytics, LPR, Access }
         private ViewMode _viewMode;
 
+
         public MainForm()
         {
             InitializeComponent();
             _viewMode = ViewMode.Alarm;
             MessageCommunicationManager.Start(EnvironmentManager.Instance.MasterSite.ServerId);
             _messageCommunication = MessageCommunicationManager.Get(EnvironmentManager.Instance.MasterSite.ServerId);
+            customDialogForm = new CustomDialogForm();
+
+            customDialogForm.MilestoneAdded += buttonTag_Click;
 
             _alarmClientManager = new AlarmClientManager();
 
@@ -36,12 +44,12 @@ namespace AlarmEventViewer
         }
 
 
-        private void OnLoad(object sender, EventArgs e)
+        private void OnLoad(object sender, System.EventArgs e)
         {
             LoadClient();
         }
 
-        private void OnClose(object sender, EventArgs e)
+        private void OnClose(object sender, System.EventArgs e)
         {
             unsubscribeAlarms();
             unsubscribeEvents();
@@ -66,8 +74,9 @@ namespace AlarmEventViewer
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "State",Width=50},
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Alarm Definition",Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Alarm Category", Width=200},
-                                                    new DataGridViewTextBoxColumn() {HeaderText = "Tag", Width=200},
-			                                   	});
+                                                    //new DataGridViewTextBoxColumn() {HeaderText = "Tag", Width=200},
+                                                    new DataGridViewTextBoxColumn() {HeaderText = "CustomTag", Width=50},
+                                                   });
                     break;
                 case ViewMode.Analytics:
                     dataGridViewAlarm.Columns.AddRange(new DataGridViewTextBoxColumn[]
@@ -75,10 +84,11 @@ namespace AlarmEventViewer
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Type", Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Object", Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Message", Width=200},
+                                                    new DataGridViewTextBoxColumn() {HeaderText = "CustomTag", Width=50},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Tag", Width=50},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "time", Width=50},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Source",Width=50},
-                                                });
+                                                }); ;
                     break;
                 case ViewMode.Event:
                     dataGridViewAlarm.Columns.AddRange(new DataGridViewTextBoxColumn[]
@@ -114,7 +124,7 @@ namespace AlarmEventViewer
             }
         }
 
-        private void onModeChange(object sender, EventArgs e)
+        private void onModeChange(object sender, System.EventArgs e)
         {
             RadioButton senderRB = sender as RadioButton;
 
@@ -341,7 +351,7 @@ namespace AlarmEventViewer
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.CustomTag);
                     dataGridViewAlarm.Rows.Add(row);
                 }
 
@@ -418,10 +428,11 @@ namespace AlarmEventViewer
                 if (alarm != null)
                 {
                     DataGridViewRow row = new DataGridViewRow();
+                    CustomDialogForm customDialog = new CustomDialogForm();
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.CustomTag);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, /*customDialog.*/);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
                 
@@ -449,7 +460,7 @@ namespace AlarmEventViewer
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
 
@@ -621,7 +632,7 @@ namespace AlarmEventViewer
             buttonTag.Enabled = _selectedRow != null;
         }
 
-        private void buttonInprogress_Click(object sender, EventArgs e)
+        private void buttonInprogress_Click(object sender, System.EventArgs e)
         {
             if (_selectedRow != null)
             {
@@ -641,32 +652,15 @@ namespace AlarmEventViewer
             }
         }
 
-        private void buttonTag_Click(object sender, EventArgs e)
+        private void buttonTag_Click(object sender, System.EventArgs e /*MilestoneAddedEventArgs m*/)
         {
             using (CustomDialogForm customDialog = new CustomDialogForm())
             {
                 customDialog.ShowDialog();
             }
-
-            if (_selectedRow != null)
-            {
-                Alarm alarm = _selectedRow.Tag as Alarm;
-                if (alarm != null)
-                {
-                    try
-                    {
-                        IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
-                        alarmClient.UpdateAlarm(alarm.EventHeader.ID, "Operator added alarm tag ", 4, 1, DateTime.UtcNow, "");
-                    }
-                    catch (Exception ex)
-                    {
-                        EnvironmentManager.Instance.ExceptionDialog("MessageHandler", ex);
-                    }
-                }
-            }
         }
 
-        private void buttonCompleted_Click(object sender, EventArgs e)
+        private void buttonCompleted_Click(object sender, System.EventArgs e)
         {
             if (_selectedRow != null)
             {
