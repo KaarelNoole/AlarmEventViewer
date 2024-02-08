@@ -30,7 +30,7 @@ namespace AlarmEventViewer
             _messageCommunication = MessageCommunicationManager.Get(EnvironmentManager.Instance.MasterSite.ServerId);
             customDialogForm = new CustomDialogForm();
 
-            customDialogForm.MilestoneAdded += buttonTag_Click;
+            customDialogForm.MilestoneAdded += buttonComment_Click;
 
             _alarmClientManager = new AlarmClientManager();
 
@@ -44,12 +44,14 @@ namespace AlarmEventViewer
         }
 
 
-        private void OnLoad(object sender, System.EventArgs e)
+        private void OnLoad(object sender, EventArgs e)
         {
             LoadClient();
         }
 
-        private void OnClose(object sender, System.EventArgs e)
+        
+
+        private void OnClose(object sender, EventArgs e)
         {
             unsubscribeAlarms();
             unsubscribeEvents();
@@ -74,8 +76,9 @@ namespace AlarmEventViewer
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "State",Width=50},
 			                                   		new DataGridViewTextBoxColumn() {HeaderText = "Alarm Definition",Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Alarm Category", Width=200},
-                                                    //new DataGridViewTextBoxColumn() {HeaderText = "Tag", Width=200},
-                                                    new DataGridViewTextBoxColumn() {HeaderText = "CustomTag", Width=50},
+                                                    new DataGridViewTextBoxColumn() {HeaderText = "Comment", Width=50},
+                                                    new DataGridViewTextBoxColumn() {HeaderText = "Camera ID", Width= 200}
+                                                    //new DataGridViewTextBoxColumn() {HeaderText = "CustomTag", Width=50},
                                                    });
                     break;
                 case ViewMode.Analytics:
@@ -84,7 +87,6 @@ namespace AlarmEventViewer
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Type", Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Object", Width=200},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Message", Width=200},
-                                                    new DataGridViewTextBoxColumn() {HeaderText = "CustomTag", Width=50},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Tag", Width=50},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "time", Width=50},
                                                     new DataGridViewTextBoxColumn() {HeaderText = "Source",Width=50},
@@ -124,7 +126,7 @@ namespace AlarmEventViewer
             }
         }
 
-        private void onModeChange(object sender, System.EventArgs e)
+        private void onModeChange(object sender, EventArgs e)
         {
             RadioButton senderRB = sender as RadioButton;
 
@@ -183,7 +185,7 @@ namespace AlarmEventViewer
                 IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
 
                 EventLine[] events = alarmClient.GetEventLines(0, 10,
-                    new VideoOS.Platform.Proxy.Alarm.EventFilter()
+                    new EventFilter()
                     {
                         Conditions = new Condition[] { new Condition() { Operator = Operator.Equals, Target = Target.Type, Value = "LPR Event" } }
                     });
@@ -221,7 +223,7 @@ namespace AlarmEventViewer
                 IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
 
                 EventLine[] events = alarmClient.GetEventLines(0, 10,
-                    new VideoOS.Platform.Proxy.Alarm.EventFilter()
+                    new EventFilter()
                     {
 
                     });
@@ -249,7 +251,7 @@ namespace AlarmEventViewer
                 IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
 
                 EventLine[] events = alarmClient.GetEventLines(0, 10,
-                    new VideoOS.Platform.Proxy.Alarm.EventFilter()
+                    new EventFilter()
                     {
                         Conditions = new Condition[] { new Condition() { Operator = Operator.Equals, Target = Target.Type, Value = "Access Control System Event" } }
                     });
@@ -300,7 +302,7 @@ namespace AlarmEventViewer
                 IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
 
                 EventLine[] events = alarmClient.GetEventLines(0, 10,
-                    new VideoOS.Platform.Proxy.Alarm.EventFilter()
+                    new EventFilter()
                     {
                         Conditions = new Condition[] { new Condition() { Operator = Operator.NotEquals, Target = Target.Type, Value = "System Event" } }
                     });
@@ -339,20 +341,22 @@ namespace AlarmEventViewer
             try
             {
                 IAlarmClient alarmClient = _alarmClientManager.GetAlarmClient(EnvironmentManager.Instance.MasterSite.ServerId);
-                AlarmLine[] alarms = alarmClient.GetAlarmLines(1, 1000,new AlarmFilter()
+                AlarmLine[] alarms = alarmClient.GetAlarmLines(1, 100,new AlarmFilter()
                 {
                     Orders = new OrderBy[] { new OrderBy() { Order = Order.Descending, Target = Target.Timestamp } }
                 });
 
                 foreach (AlarmLine line in alarms)
                 {
-                    Alarm alarm = alarmClient.Get(line.Id);
-                    DataGridViewRow row = new DataGridViewRow();
-                    row.Tag = alarm;
-                    string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
-                    row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.CustomTag);
-                    dataGridViewAlarm.Rows.Add(row);
+                        CustomDialogForm customDialog = new CustomDialogForm();
+                        Alarm alarm = alarmClient.Get(line.Id);
+                        
+                        DataGridViewRow row = new DataGridViewRow();
+                        row.Tag = alarm;
+                        string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
+                        row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
+                                        alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.MessageId);
+                        dataGridViewAlarm.Rows.Add(row);
                 }
 
             }
@@ -371,13 +375,13 @@ namespace AlarmEventViewer
             if (_obj2 == null)
             {
                 _obj2 = _messageCommunication.RegisterCommunicationFilter(ChangedAlarmMessageHandler,
-                 new VideoOS.Platform.Messaging.CommunicationIdFilter(VideoOS.Platform.Messaging.MessageId.Server.ChangedAlarmIndication), null,EndPointType.Server);
+                 new CommunicationIdFilter(MessageId.Server.ChangedAlarmIndication), null, EndPointType.Server);
             }
             //System.Threading.Thread.Sleep(60000);
             if (_obj1 == null)
             {
                 _obj1 = _messageCommunication.RegisterCommunicationFilter(NewAlarmMessageHandler,
-                   new VideoOS.Platform.Messaging.CommunicationIdFilter(VideoOS.Platform.Messaging.MessageId.Server.NewAlarmIndication), null, EndPointType.Server);
+                   new CommunicationIdFilter(MessageId.Server.NewAlarmIndication), null, EndPointType.Server);
             }
         }
         private void unsubscribeAlarms()
@@ -399,7 +403,7 @@ namespace AlarmEventViewer
             if (_obj3 == null)
             {
                 _obj3 = _messageCommunication.RegisterCommunicationFilter(NewEventMessageHandler,
-                    new VideoOS.Platform.Messaging.CommunicationIdFilter(VideoOS.Platform.Messaging.MessageId.Server.NewEventsIndication), null, EndPointType.Server);
+                    new CommunicationIdFilter(MessageId.Server.NewEventsIndication), null, EndPointType.Server);
             }
         }
         private void unsubscribeEvents()
@@ -424,18 +428,20 @@ namespace AlarmEventViewer
             }
             else
             {
-                Alarm alarm = message.Data as Alarm;
-                if (alarm != null)
-                {
-                    DataGridViewRow row = new DataGridViewRow();
-                    CustomDialogForm customDialog = new CustomDialogForm();
-                    row.Tag = alarm;
-                    string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
-                    row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, /*customDialog.*/);
-                    dataGridViewAlarm.Rows.Insert(0, row);
-                }
+                    Alarm alarm = message.Data as Alarm;
+                    if (alarm != null)
+                    {
+                        DataGridViewRow row = new DataGridViewRow();
+                        CustomDialogForm customDialog = new CustomDialogForm();
+                        
+                        row.Tag = alarm;
+                        string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
+                        row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
+                                        alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.MessageId);
+                        dataGridViewAlarm.Rows.Insert(0, row);
+                    }
                 
+
             }
             return null;
         }
@@ -457,10 +463,11 @@ namespace AlarmEventViewer
                 if (alarm != null)
                 {
                     DataGridViewRow row = new DataGridViewRow();
+                    CustomDialogForm customDialog = new CustomDialogForm();
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.MessageId);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
 
@@ -522,7 +529,7 @@ namespace AlarmEventViewer
             else
             {
                 DataGridViewRow row = new DataGridViewRow();
-                var events = message.Data as System.Collections.Generic.IEnumerable<BaseEvent>;
+                var events = message.Data as IEnumerable<BaseEvent>;
                 if (events == null) return null;
                 foreach (BaseEvent ev in events)
                 {
@@ -632,7 +639,7 @@ namespace AlarmEventViewer
             buttonTag.Enabled = _selectedRow != null;
         }
 
-        private void buttonInprogress_Click(object sender, System.EventArgs e)
+        private void buttonInprogress_Click(object sender, EventArgs e)
         {
             if (_selectedRow != null)
             {
@@ -652,15 +659,22 @@ namespace AlarmEventViewer
             }
         }
 
-        private void buttonTag_Click(object sender, System.EventArgs e /*MilestoneAddedEventArgs m*/)
-        {
-            using (CustomDialogForm customDialog = new CustomDialogForm())
-            {
-                customDialog.ShowDialog();
-            }
+        private void buttonComment_Click(object sender, EventArgs e)
+        {   
+            CustomDialogForm customDialog = new CustomDialogForm();
+            customDialog.ShowDialog();
+            Alarm alarm = _selectedRow.Tag as Alarm;
+            IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
+            alarmClient.UpdateAlarmValues(alarm.EventHeader.ID, new KeyValuePair<string, string>[]
+            { new KeyValuePair<string, string>("Comment", customDialog.EnteredMilestone)});
+            
+            //customDialogForm.AddButton_Click(Text);
+
+            
+
         }
 
-        private void buttonCompleted_Click(object sender, System.EventArgs e)
+        private void buttonCompleted_Click(object sender, EventArgs e)
         {
             if (_selectedRow != null)
             {
@@ -678,6 +692,12 @@ namespace AlarmEventViewer
                     }
                 }
             }
+        }
+
+        private void buttonVideo_Click(object sender, EventArgs e)
+        {
+            VideoForm videoForm = new VideoForm();
+
         }
         #endregion
 

@@ -17,8 +17,16 @@ namespace AlarmEventViewer
         private TextBox textBox;
         private Button closeButton;
         private Button addButton;
-        DataGridViewRow _selectedRow = null;
-        private AlarmClientManager _alarmClientManager;
+
+        private string enteredMilestone;
+
+        // Declare the EnteredMilestone property
+        public string EnteredMilestone
+        {
+            get { return enteredMilestone; }
+            private set { enteredMilestone = value; }
+        }
+
         public event EventHandler<EventArgs> MilestoneAdded;
 
         public CustomDialogForm()
@@ -54,44 +62,26 @@ namespace AlarmEventViewer
             Close();
         }
 
-        public void AddButton_Click(Object sender, System.EventArgs e)
+        
+
+        public void AddButton_Click(Object sender, EventArgs e)
         {
-            // Get the content of the textBox
-            string milestoneText = textBox.Text;
 
-            // Check if the milestone text is not empty
-            if (!string.IsNullOrWhiteSpace(milestoneText))
+            // Check if the textBox text is not empty
+            if (!string.IsNullOrWhiteSpace(textBox.Text))
             {
+                // Store the EnteredMilestone text in the CustomDialogForm class
+                EnteredMilestone = textBox.Text;
 
-                
                 // Display an alert (for example, MessageBox) - Replace with your actual alarm logic
-                MessageBox.Show($"Milestone '{milestoneText}' added to Xproject Smart Client!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Milestone '{EnteredMilestone}' added to Xproject Smart Client!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 Close();
-                
-
             }
             else
             {
                 // Display an error message if the milestone text is empty
                 MessageBox.Show("Please enter a text.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            
-
-        }
-
-        protected virtual void OnMilestoneAdded(EventArgs e)
-        {
-            MilestoneAdded?.Invoke(this, e);
-        }
-
-        public class EventArgs : System.EventArgs
-        {
-            public string MilestoneText { get; }
-
-            public EventArgs(string milestoneText)
-            {
-                MilestoneText = milestoneText;
             }
         }
     }

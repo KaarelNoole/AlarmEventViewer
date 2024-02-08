@@ -28,8 +28,8 @@ namespace AlarmEventViewer
             Application.Run(loginForm);								// Show and complete the form and login to server
 			if (Connected)
 			{
-				Application.Run(new MainForm());
-			}
+                Application.Run(new MainForm());
+            }
 
 		}
 

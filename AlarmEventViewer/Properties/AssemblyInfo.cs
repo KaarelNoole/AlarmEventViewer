@@ -19,6 +19,8 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+[assembly: Guid("476d0530-b3df-44b4-8630-fa446c860ba6")]
+
 // Version information for an assembly consists of the following four values:
 //
 //      Major Version

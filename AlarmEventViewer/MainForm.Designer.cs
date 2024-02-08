@@ -43,8 +43,8 @@ namespace AlarmEventViewer
             this.rbEvents = new System.Windows.Forms.RadioButton();
             this.rbAlarms = new System.Windows.Forms.RadioButton();
             this.rbAccess = new System.Windows.Forms.RadioButton();
-            this.rbSavedAlarm = new System.Windows.Forms.RadioButton();
             this.buttonTag = new System.Windows.Forms.Button();
+            this.buttonVideo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAlarm)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -105,14 +105,27 @@ namespace AlarmEventViewer
             // 
             this.buttonTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonTag.Enabled = false;
-            this.buttonTag.Location = new System.Drawing.Point(270, 442);
+            this.buttonTag.Location = new System.Drawing.Point(240, 442);
             this.buttonTag.Name = "buttonTag";
             this.buttonTag.Size = new System.Drawing.Size(98, 23);
             this.buttonTag.TabIndex = 7;
-            this.buttonTag.Text = "Tag";
+            this.buttonTag.Text = "Comment";
             this.buttonTag.UseVisualStyleBackColor = true;
-            this.buttonTag.Click += new System.EventHandler(this.buttonTag_Click);
+            this.buttonTag.Click += new System.EventHandler(this.buttonComment_Click);
             this.Controls.Add(this.buttonTag);
+            // 
+            // buttonVideo
+            // 
+
+            this.buttonVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonVideo.Location = new System.Drawing.Point(354, 442);
+            this.buttonVideo.Name = "buttonVideo";
+            this.buttonVideo.Size = new System.Drawing.Size(98, 23);
+            this.buttonVideo.TabIndex = 8;
+            this.buttonVideo.Text = "Video";
+            this.buttonVideo.UseVisualStyleBackColor = true;
+            this.buttonVideo.Click += new System.EventHandler(this.buttonVideo_Click);
+            this.Controls.Add(this.buttonVideo);
             // 
             // groupBox1
             // 
@@ -197,6 +210,7 @@ namespace AlarmEventViewer
             this.Controls.Add(this.buttonCompleted);
             this.Controls.Add(this.buttonInprogress);
             this.Controls.Add(this.buttonTag);
+            this.Controls.Add(this.buttonVideo);
             this.Controls.Add(this.dataGridViewAlarm);
             this.Controls.Add(this.buttonClose);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -211,7 +225,17 @@ namespace AlarmEventViewer
             // DialogWindow
             //
 
-		}
+            //if (_contentLoaded)
+            //{
+            //    return;
+            //}
+            //_contentLoaded = true;
+            //System.Uri resourceLocater = new System.Uri("/VideoViewer;component/mainwindow.xaml", System.UriKind.Relative);
+
+            //#line 1 "..\..\..\MainWindow.xaml"
+            //System.Windows.Application.LoadComponent(this, resourceLocater);
+
+        }
 
 		#endregion
 
@@ -228,7 +252,6 @@ namespace AlarmEventViewer
         private System.Windows.Forms.RadioButton rbAccess;
         private System.Windows.Forms.RadioButton rbSavedAlarm;
         private System.Windows.Forms.Button buttonTag;
-        private System.Windows.Forms.Button AddTag;
-        private System.Windows.Forms.TextBox textBox;
+        private System.Windows.Forms.Button buttonVideo;
     }
 }
