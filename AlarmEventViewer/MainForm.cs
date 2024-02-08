@@ -697,6 +697,7 @@ namespace AlarmEventViewer
         private void buttonVideo_Click(object sender, EventArgs e)
         {
             VideoForm videoForm = new VideoForm();
+            videoForm.ShowDialog();
 
         }
         #endregion
