@@ -353,9 +353,11 @@ namespace AlarmEventViewer
                         
                         DataGridViewRow row = new DataGridViewRow();
                         row.Tag = alarm;
-                        string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
+                        alarmClient.UpdateAlarmValues(alarm.EventHeader.ID, new KeyValuePair<string, string>[]
+                        { new KeyValuePair<string, string>("Comment", customDialog.EnteredMilestone)});
+                    string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                         row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                        alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.MessageId);
+                                        alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, customDialog.EnteredMilestone ,alarm.EventHeader.MessageId);
                         dataGridViewAlarm.Rows.Add(row);
                 }
 
@@ -433,11 +435,13 @@ namespace AlarmEventViewer
                     {
                         DataGridViewRow row = new DataGridViewRow();
                         CustomDialogForm customDialog = new CustomDialogForm();
-                        
-                        row.Tag = alarm;
+                        IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
+                        alarmClient.UpdateAlarmValues(alarm.EventHeader.ID, new KeyValuePair<string, string>[]
+                        { new KeyValuePair<string, string>("Comment", customDialog.EnteredMilestone)});
+                    row.Tag = alarm;
                         string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                         row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                        alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.MessageId);
+                                        alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, customDialog.EnteredMilestone, alarm.CategoryName, alarm.EventHeader.MessageId);
                         dataGridViewAlarm.Rows.Insert(0, row);
                     }
                 
@@ -464,10 +468,13 @@ namespace AlarmEventViewer
                 {
                     DataGridViewRow row = new DataGridViewRow();
                     CustomDialogForm customDialog = new CustomDialogForm();
+                    IAlarmClient alarmClient = LookupAlarmClient(alarm.EventHeader.Source.FQID);
+                    alarmClient.UpdateAlarmValues(alarm.EventHeader.ID, new KeyValuePair<string, string>[]
+                    { new KeyValuePair<string, string>("Comment", customDialog.EnteredMilestone)});
                     row.Tag = alarm;
                     string alarmDef = alarm.RuleList != null && alarm.RuleList.Count > 0 ? alarm.RuleList[0].Name : "";
                     row.CreateCells(dataGridViewAlarm, alarm.EventHeader.Source.Name, alarm.EventHeader.Timestamp.ToLocalTime(),
-                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName, alarm.EventHeader.MessageId);
+                                    alarm.EventHeader.Message, alarm.EventHeader.Priority, alarm.State, alarmDef, alarm.CategoryName,customDialog.EnteredMilestone, alarm.EventHeader.MessageId);
                     dataGridViewAlarm.Rows.Insert(0, row);
                 }
 

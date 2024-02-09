@@ -38,11 +38,11 @@ namespace AlarmEventViewer
             this.buttonInprogress = new System.Windows.Forms.Button();
             this.buttonCompleted = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbAccess = new System.Windows.Forms.RadioButton();
             this.rbLPR = new System.Windows.Forms.RadioButton();
             this.rbAnalytics = new System.Windows.Forms.RadioButton();
             this.rbEvents = new System.Windows.Forms.RadioButton();
             this.rbAlarms = new System.Windows.Forms.RadioButton();
-            this.rbAccess = new System.Windows.Forms.RadioButton();
             this.buttonTag = new System.Windows.Forms.Button();
             this.buttonVideo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAlarm)).BeginInit();
@@ -52,9 +52,10 @@ namespace AlarmEventViewer
             // buttonClose
             // 
             this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClose.Location = new System.Drawing.Point(464, 442);
+            this.buttonClose.Location = new System.Drawing.Point(1062, 661);
+            this.buttonClose.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(75, 23);
+            this.buttonClose.Size = new System.Drawing.Size(100, 28);
             this.buttonClose.TabIndex = 0;
             this.buttonClose.Text = "Close";
             this.buttonClose.UseVisualStyleBackColor = true;
@@ -68,12 +69,14 @@ namespace AlarmEventViewer
             this.dataGridViewAlarm.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridViewAlarm.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dataGridViewAlarm.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewAlarm.Location = new System.Drawing.Point(13, 89);
+            this.dataGridViewAlarm.Location = new System.Drawing.Point(17, 110);
+            this.dataGridViewAlarm.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridViewAlarm.MultiSelect = false;
             this.dataGridViewAlarm.Name = "dataGridViewAlarm";
             this.dataGridViewAlarm.ReadOnly = true;
             this.dataGridViewAlarm.RowHeadersVisible = false;
-            this.dataGridViewAlarm.Size = new System.Drawing.Size(526, 347);
+            this.dataGridViewAlarm.RowHeadersWidth = 51;
+            this.dataGridViewAlarm.Size = new System.Drawing.Size(1144, 526);
             this.dataGridViewAlarm.TabIndex = 4;
             this.dataGridViewAlarm.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.OnCellClick);
             // 
@@ -81,9 +84,10 @@ namespace AlarmEventViewer
             // 
             this.buttonInprogress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonInprogress.Enabled = false;
-            this.buttonInprogress.Location = new System.Drawing.Point(12, 442);
+            this.buttonInprogress.Location = new System.Drawing.Point(16, 661);
+            this.buttonInprogress.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonInprogress.Name = "buttonInprogress";
-            this.buttonInprogress.Size = new System.Drawing.Size(98, 23);
+            this.buttonInprogress.Size = new System.Drawing.Size(131, 28);
             this.buttonInprogress.TabIndex = 5;
             this.buttonInprogress.Text = "In Progress";
             this.buttonInprogress.UseVisualStyleBackColor = true;
@@ -93,39 +97,14 @@ namespace AlarmEventViewer
             // 
             this.buttonCompleted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCompleted.Enabled = false;
-            this.buttonCompleted.Location = new System.Drawing.Point(126, 442);
+            this.buttonCompleted.Location = new System.Drawing.Point(168, 661);
+            this.buttonCompleted.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonCompleted.Name = "buttonCompleted";
-            this.buttonCompleted.Size = new System.Drawing.Size(98, 23);
+            this.buttonCompleted.Size = new System.Drawing.Size(131, 28);
             this.buttonCompleted.TabIndex = 6;
             this.buttonCompleted.Text = "Completed";
             this.buttonCompleted.UseVisualStyleBackColor = true;
             this.buttonCompleted.Click += new System.EventHandler(this.buttonCompleted_Click);
-            // 
-            // buttonTag
-            // 
-            this.buttonTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonTag.Enabled = false;
-            this.buttonTag.Location = new System.Drawing.Point(240, 442);
-            this.buttonTag.Name = "buttonTag";
-            this.buttonTag.Size = new System.Drawing.Size(98, 23);
-            this.buttonTag.TabIndex = 7;
-            this.buttonTag.Text = "Comment";
-            this.buttonTag.UseVisualStyleBackColor = true;
-            this.buttonTag.Click += new System.EventHandler(this.buttonComment_Click);
-            this.Controls.Add(this.buttonTag);
-            // 
-            // buttonVideo
-            // 
-
-            this.buttonVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonVideo.Location = new System.Drawing.Point(354, 442);
-            this.buttonVideo.Name = "buttonVideo";
-            this.buttonVideo.Size = new System.Drawing.Size(98, 23);
-            this.buttonVideo.TabIndex = 8;
-            this.buttonVideo.Text = "Video";
-            this.buttonVideo.UseVisualStyleBackColor = true;
-            this.buttonVideo.Click += new System.EventHandler(this.buttonVideo_Click);
-            this.Controls.Add(this.buttonVideo);
             // 
             // groupBox1
             // 
@@ -136,19 +115,35 @@ namespace AlarmEventViewer
             this.groupBox1.Controls.Add(this.rbAnalytics);
             this.groupBox1.Controls.Add(this.rbEvents);
             this.groupBox1.Controls.Add(this.rbAlarms);
-            this.groupBox1.Location = new System.Drawing.Point(13, 13);
+            this.groupBox1.Location = new System.Drawing.Point(17, 16);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(526, 70);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Size = new System.Drawing.Size(1144, 86);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Viewer mode";
             // 
+            // rbAccess
+            // 
+            this.rbAccess.AutoSize = true;
+            this.rbAccess.Location = new System.Drawing.Point(343, 25);
+            this.rbAccess.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbAccess.Name = "rbAccess";
+            this.rbAccess.Size = new System.Drawing.Size(162, 20);
+            this.rbAccess.TabIndex = 4;
+            this.rbAccess.TabStop = true;
+            this.rbAccess.Text = "Access Control Events";
+            this.rbAccess.UseVisualStyleBackColor = true;
+            this.rbAccess.CheckedChanged += new System.EventHandler(this.onModeChange);
+            // 
             // rbLPR
             // 
             this.rbLPR.AutoSize = true;
-            this.rbLPR.Location = new System.Drawing.Point(125, 44);
+            this.rbLPR.Location = new System.Drawing.Point(167, 54);
+            this.rbLPR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rbLPR.Name = "rbLPR";
-            this.rbLPR.Size = new System.Drawing.Size(82, 17);
+            this.rbLPR.Size = new System.Drawing.Size(98, 20);
             this.rbLPR.TabIndex = 3;
             this.rbLPR.Text = "LPR Events";
             this.rbLPR.UseVisualStyleBackColor = true;
@@ -157,9 +152,10 @@ namespace AlarmEventViewer
             // rbAnalytics
             // 
             this.rbAnalytics.AutoSize = true;
-            this.rbAnalytics.Location = new System.Drawing.Point(125, 20);
+            this.rbAnalytics.Location = new System.Drawing.Point(167, 25);
+            this.rbAnalytics.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rbAnalytics.Name = "rbAnalytics";
-            this.rbAnalytics.Size = new System.Drawing.Size(103, 17);
+            this.rbAnalytics.Size = new System.Drawing.Size(126, 20);
             this.rbAnalytics.TabIndex = 2;
             this.rbAnalytics.Text = "Analytics Events";
             this.rbAnalytics.UseVisualStyleBackColor = true;
@@ -168,9 +164,10 @@ namespace AlarmEventViewer
             // rbEvents
             // 
             this.rbEvents.AutoSize = true;
-            this.rbEvents.Location = new System.Drawing.Point(7, 44);
+            this.rbEvents.Location = new System.Drawing.Point(9, 54);
+            this.rbEvents.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rbEvents.Name = "rbEvents";
-            this.rbEvents.Size = new System.Drawing.Size(58, 17);
+            this.rbEvents.Size = new System.Drawing.Size(69, 20);
             this.rbEvents.TabIndex = 1;
             this.rbEvents.Text = "Events";
             this.rbEvents.UseVisualStyleBackColor = true;
@@ -180,32 +177,46 @@ namespace AlarmEventViewer
             // 
             this.rbAlarms.AutoSize = true;
             this.rbAlarms.Checked = true;
-            this.rbAlarms.Location = new System.Drawing.Point(7, 20);
+            this.rbAlarms.Location = new System.Drawing.Point(9, 25);
+            this.rbAlarms.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.rbAlarms.Name = "rbAlarms";
-            this.rbAlarms.Size = new System.Drawing.Size(56, 17);
+            this.rbAlarms.Size = new System.Drawing.Size(70, 20);
             this.rbAlarms.TabIndex = 9;
             this.rbAlarms.TabStop = true;
             this.rbAlarms.Text = "Alarms";
             this.rbAlarms.UseVisualStyleBackColor = true;
             this.rbAlarms.CheckedChanged += new System.EventHandler(this.onModeChange);
             // 
-            // rbAccess
+            // buttonTag
             // 
-            this.rbAccess.AutoSize = true;
-            this.rbAccess.Location = new System.Drawing.Point(257, 20);
-            this.rbAccess.Name = "rbAccess";
-            this.rbAccess.Size = new System.Drawing.Size(132, 17);
-            this.rbAccess.TabIndex = 4;
-            this.rbAccess.TabStop = true;
-            this.rbAccess.Text = "Access Control Events";
-            this.rbAccess.UseVisualStyleBackColor = true;
-            this.rbAccess.CheckedChanged += new System.EventHandler(this.onModeChange);
+            this.buttonTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonTag.Enabled = false;
+            this.buttonTag.Location = new System.Drawing.Point(320, 661);
+            this.buttonTag.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonTag.Name = "buttonTag";
+            this.buttonTag.Size = new System.Drawing.Size(131, 28);
+            this.buttonTag.TabIndex = 7;
+            this.buttonTag.Text = "Comment";
+            this.buttonTag.UseVisualStyleBackColor = true;
+            this.buttonTag.Click += new System.EventHandler(this.buttonComment_Click);
+            // 
+            // buttonVideo
+            // 
+            this.buttonVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonVideo.Location = new System.Drawing.Point(472, 661);
+            this.buttonVideo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonVideo.Name = "buttonVideo";
+            this.buttonVideo.Size = new System.Drawing.Size(131, 28);
+            this.buttonVideo.TabIndex = 8;
+            this.buttonVideo.Text = "Video";
+            this.buttonVideo.UseVisualStyleBackColor = true;
+            this.buttonVideo.Click += new System.EventHandler(this.buttonVideo_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(560, 477);
+            this.ClientSize = new System.Drawing.Size(1190, 704);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCompleted);
             this.Controls.Add(this.buttonInprogress);
@@ -214,6 +225,7 @@ namespace AlarmEventViewer
             this.Controls.Add(this.dataGridViewAlarm);
             this.Controls.Add(this.buttonClose);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.Text = "Alarms and Events Viewer Application";
             this.Load += new System.EventHandler(this.OnLoad);
@@ -221,19 +233,6 @@ namespace AlarmEventViewer
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            //
-            // DialogWindow
-            //
-
-            //if (_contentLoaded)
-            //{
-            //    return;
-            //}
-            //_contentLoaded = true;
-            //System.Uri resourceLocater = new System.Uri("/VideoViewer;component/mainwindow.xaml", System.UriKind.Relative);
-
-            //#line 1 "..\..\..\MainWindow.xaml"
-            //System.Windows.Application.LoadComponent(this, resourceLocater);
 
         }
 
